@@ -1,20 +1,36 @@
 package org.yearup;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class AccountingLedger {
-    // Global variables for use in multiple functions
-    public Scanner scanner = new Scanner(System.in);
-    public TransactionManager transactionManager = new TransactionManager();
-    public HashMap<String, List<Transaction>> transactionTypes = new HashMap<>();
+    static Scanner scanner = new Scanner(System.in);
+    static TransactionManager transactionManager = new TransactionManager();
+    static HashMap<String, List<Transaction>> transactionTypes = new HashMap<>();
 
-    public void run() {
-        // Load transactions from the csv file
+    public static void main(String[] args) {
         transactionManager.loadTransactions();
-        // Initialize transaction types
         transactionTypes.put("deposit", new ArrayList<>());
         transactionTypes.put("payment", new ArrayList<>());
-        // Start the loop and display the home screen
-        homeScreen();
+
+        while (true) {
+            int selection = displayHomeScreen();
+
+            if (selection == 1) {
+                addDeposit();
+            } else if (selection == 2) {
+                makePayment();
+            } else if (selection == 3) {
+                displayLedger();
+            } else if (selection == 0) {
+                System.out.println("Exiting the application...");
+                break;
+            } else {
+                System.out.println("Invalid option. Please try again.");
+            }
+        }
     }
 }
