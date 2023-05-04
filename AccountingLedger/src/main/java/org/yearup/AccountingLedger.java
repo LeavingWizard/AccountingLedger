@@ -40,14 +40,14 @@ public class AccountingLedger {
     }
 
     private static int displayHomeScreen() {
-        System.out.println("\n\033[1mHome\033[0m");
-        System.out.println("---------------------------------------------------------------");
+        System.out.println("\n"+ColorCodes.CYAN+"Home"+ColorCodes.RESET);
+        System.out.println("\033[1;36m---------------------------------------------------------------\033[0m");
         System.out.println("\nWhat do you want to do?");
-        System.out.println("1) Add Deposit");
-        System.out.println("2) Make Payment (Debit)");
-        System.out.println("3) Ledger");
-        System.out.println("4) Custom Search");
-        System.out.println("0) Exit");
+        System.out.println("\033[32m1) Add Deposit\033[0m");
+        System.out.println("\033[31m2) Make Payment (Debit)\033[0m");
+        System.out.println("\033[1;33m3) Ledger\033[0m");
+        System.out.println("\033[1;34m4) Custom Search\033[0m");
+        System.out.println("\033[1;31m0) Exit\033[0m");
         System.out.print("Enter your option: ");
         int selection = scanner.nextInt();
         scanner.nextLine();
@@ -55,7 +55,7 @@ public class AccountingLedger {
     }
 
     private static void addDeposit() {
-        System.out.println("\n\033[1mAdd Deposit\033[0m");
+        System.out.println("\n\033[1;32mAdd Deposit\033[0m");
         System.out.println("---------------------------------------------------------------");
 
         System.out.print("Date (yyyy-MM-dd): ");
@@ -77,7 +77,7 @@ public class AccountingLedger {
     }
 
     private static void makePayment() {
-        System.out.println("\n\033[1mMake Payment (Debit)\033[0m");
+        System.out.println("\n\033[1;31mMake Payment (Debit)\033[0m");
         System.out.println("---------------------------------------------------------------");
 
         System.out.print("Date (yyyy-MM-dd): ");
@@ -100,7 +100,7 @@ public class AccountingLedger {
 
     private static void displayLedgerMenu() {
         while (true) {
-            System.out.println("\n\033[1mLedger Menu\033[0m");
+            System.out.println("\n\033[1;33mLedger Menu\033[0m");
             System.out.println("---------------------------------------------------------------");
             System.out.println("1) All - Display all entries");
             System.out.println("2) Deposits - Display only the entries that are deposits");
@@ -149,7 +149,7 @@ public class AccountingLedger {
     }
 
     private static void customSearch() {
-        System.out.println("\n\033[1mCustom Search\033[0m");
+        System.out.println("\n\033[1;34mCustom Search\033[0m");
         System.out.println("---------------------------------------------------------------");
 
         System.out.print("Start Date (yyyy-MM-dd) or leave empty: ");
@@ -171,7 +171,9 @@ public class AccountingLedger {
                     || (!vendor.isEmpty() && !transaction.getVendor().toLowerCase().contains(vendor.toLowerCase()))
                     || (amount != null && Double.compare(transaction.getAmount(), amount) != 0))
                 continue;
+
+            displayTransaction(transaction);
         }
-        displayTransaction(transaction);
     }
 }
+
