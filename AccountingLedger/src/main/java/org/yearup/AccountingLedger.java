@@ -9,6 +9,7 @@ public class AccountingLedger {
 
     static ArrayList<Transaction> transactions = new ArrayList<>();
     static int counter = 0;
+    private static Transaction transaction;
 
     public static void main(String[] args) {
         loadTransactions();
@@ -22,11 +23,13 @@ public class AccountingLedger {
                 makePayment();
             } else if (selection == 3) {
                 displayLedgerMenu();
+            } else if (selection == 4) {
+                customSearch();
             } else if (selection == 0) {
-                System.out.println("Exiting the application...");
+                System.out.println("\033[31mExiting the application...\033[0m");
                 break;
             } else {
-                System.out.println("Invalid option. Please try again.");
+                System.out.println("\033[31mInvalid option. Please try again.\033[0m");
             }
         }
     }
@@ -37,12 +40,13 @@ public class AccountingLedger {
     }
 
     private static int displayHomeScreen() {
-        System.out.println("\nHome");
+        System.out.println("\n\033[1mHome\033[0m");
         System.out.println("---------------------------------------------------------------");
         System.out.println("\nWhat do you want to do?");
         System.out.println("1) Add Deposit");
         System.out.println("2) Make Payment (Debit)");
         System.out.println("3) Ledger");
+        System.out.println("4) Custom Search");
         System.out.println("0) Exit");
         System.out.print("Enter your option: ");
         int selection = scanner.nextInt();
@@ -51,7 +55,7 @@ public class AccountingLedger {
     }
 
     private static void addDeposit() {
-        System.out.println("\nAdd Deposit");
+        System.out.println("\n\033[1mAdd Deposit\033[0m");
         System.out.println("---------------------------------------------------------------");
 
         System.out.print("Date (yyyy-MM-dd): ");
@@ -73,7 +77,7 @@ public class AccountingLedger {
     }
 
     private static void makePayment() {
-        System.out.println("\nMake Payment (Debit)");
+        System.out.println("\n\033[1mMake Payment (Debit)\033[0m");
         System.out.println("---------------------------------------------------------------");
 
         System.out.print("Date (yyyy-MM-dd): ");
@@ -85,7 +89,7 @@ public class AccountingLedger {
         System.out.print("Vendor: ");
         String vendor = scanner.nextLine();
         System.out.print("Amount: ");
-        double amount = scanner.nextDouble();
+        double amount = -Math.abs(scanner.nextDouble());
         scanner.nextLine();
 
         Transaction payment = new Transaction(date, time, description, vendor, amount);
@@ -96,7 +100,7 @@ public class AccountingLedger {
 
     private static void displayLedgerMenu() {
         while (true) {
-            System.out.println("\nLedger Menu");
+            System.out.println("\n\033[1mLedger Menu\033[0m");
             System.out.println("---------------------------------------------------------------");
             System.out.println("1) All - Display all entries");
             System.out.println("2) Deposits - Display only the entries that are deposits");
@@ -115,14 +119,13 @@ public class AccountingLedger {
             } else if (selection == 4) {
                 return;
             } else {
-                System.out.println("Invalid option. Please try again.");
+                System.out.println("\033[31mInvalid option. Please try again.\033[0m");
             }
         }
     }
 
-
     private static void displayLedger(String type) {
-        System.out.println("\nLedger");
+        System.out.println("\n\033[1mLedger\033[0m");
         System.out.println("---------------------------------------------------------------");
 
         for (int i = 0; i <= counter; i++) {
@@ -135,11 +138,40 @@ public class AccountingLedger {
     }
 
     private static void displayTransaction(Transaction transaction) {
-        System.out.printf("%s | %s | %-20s | %-20s | %10.2f\n",
+        String color = transaction.getAmount() < 0 ? "\033[31m" : "\033[32m";
+        System.out.printf("%s | %s | %-20s | %-20s | %s%10.2f\033[0m\n",
                 transaction.getDate(),
                 transaction.getTime(),
                 transaction.getDescription(),
                 transaction.getVendor(),
+                color,
                 transaction.getAmount());
+    }
+
+    private static void customSearch() {
+        System.out.println("\n\033[1mCustom Search\033[0m");
+        System.out.println("---------------------------------------------------------------");
+
+        System.out.print("Start Date (yyyy-MM-dd) or leave empty: ");
+        String startDate = scanner.nextLine().trim();
+        System.out.print("End Date (yyyy-MM-dd) or leave empty: ");
+        String endDate = scanner.nextLine().trim();
+        System.out.print("Description or leave empty: ");
+        String description = scanner.nextLine().trim();
+        System.out.print("Vendor or leave empty: ");
+        String vendor = scanner.nextLine().trim();
+        System.out.print("Amount or leave empty: ");
+        String amountStr = scanner.nextLine().trim();
+        Double amount = amountStr.isEmpty() ? null : Double.parseDouble(amountStr);
+
+        for (Transaction transaction : transactions) {
+            if ((!startDate.isEmpty() && transaction.getDate().compareTo(startDate) < 0)
+                    || (!endDate.isEmpty() && transaction.getDate().compareTo(endDate) > 0)
+                    || (!description.isEmpty() && !transaction.getDescription().toLowerCase().contains(description.toLowerCase()))
+                    || (!vendor.isEmpty() && !transaction.getVendor().toLowerCase().contains(vendor.toLowerCase()))
+                    || (amount != null && Double.compare(transaction.getAmount(), amount) != 0))
+                continue;
+        }
+        displayTransaction(transaction);
     }
 }
