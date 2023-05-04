@@ -2,7 +2,7 @@
 
 A simple console-based accounting ledger application for managing transactions, built using Java. The application allows users to effortlessly track their financial transactions, making it easy to maintain an organized and up-to-date ledger.
 
-![Home Screen](/Users/leavingwizard/Desktop/HomeScreen.png)
+![Home Screen](Images/HomeScreen.png)
 
 ## ✨ Features
 
